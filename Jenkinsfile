@@ -2,18 +2,8 @@ pipeline {
     agent any
 
     stages {
-        stage('w/0 docker') {
-            steps {
-                sh '''
-                    echo "Hello World"
-                    ls -la
-                    touch container-no.txt
-                '''
-                
-                
-            }
-        }
-        stage('with docker') {
+        
+        stage('Build') {
             agent {
                     docker {
                         image 'node:18-alpine'
@@ -22,9 +12,14 @@ pipeline {
             }
             steps {
                 sh '''
-                    echo "Hello World"
                     ls -la
-                    touch container-yes.txt
+                    node --version
+                    npm --version
+                    echo "Installing dependencies..."
+                    npm ci
+                    echo "Building the project..."
+                    npm run build
+                    ls -la
                 '''
             }
         }
